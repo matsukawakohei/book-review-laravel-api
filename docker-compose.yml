@@ -1,0 +1,36 @@
+version: '3'
+services:
+  app:
+    build:
+      context: .
+      dockerfile: ./docker/php/dockerfile
+    volumes:
+        - ./src:/var/www
+    working_dir: /var/www
+    ports:
+      - 8000:8000
+    networks:
+      default:
+      book-reviwe:
+  mysql:
+    build:
+      context: .
+      dockerfile: ./docker/mysql/dockerfile
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=password
+    volumes:
+      - book-reviwe-db:/var/lib/mysql
+  mailpit:
+    image: 'axllent/mailpit:latest'
+    ports:
+      - '1025:1025'
+      - '8025:8025'
+    environment:
+      - TZ=Asia/Tokyo
+volumes:
+  book-reviwe-db:
+networks:
+  book-reviwe:
+    external: true
