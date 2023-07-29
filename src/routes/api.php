@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\V1\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -16,4 +17,16 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
+});
+
+Route::prefix('api')->name('api.')->group(function() {
+    Route::prefix('v1')->name('v1.')->group(function() {
+        Route::prefix('user')
+            ->controller(UserController::class)
+            ->name('user.')
+            ->group(function() {
+
+            Route::post('', 'store')->name('store');
+        });
+    });
 });
