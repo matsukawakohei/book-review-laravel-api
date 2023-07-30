@@ -18,8 +18,6 @@ class UserController extends Controller
             'password' => $request->password,
         ]);
 
-        \Log::error(var_export($result, true));
-
         return $result;
     }
 }
