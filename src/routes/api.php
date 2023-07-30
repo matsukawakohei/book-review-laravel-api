@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\V1\Auth\LoginController;
 use App\Http\Controllers\Api\V1\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -27,6 +28,14 @@ Route::prefix('api')->name('api.')->group(function() {
             ->group(function() {
 
             Route::post('', 'store')->name('store');
+        });
+
+        Route::prefix('auth')
+            ->controller(LoginController::class)
+            ->name('auth.')
+            ->group(function() {
+
+            Route::post('', 'login')->name('login');
         });
     });
 });
