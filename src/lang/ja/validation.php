@@ -36,6 +36,7 @@ return [
     'date'                 => ':attributeには有効な日付を指定してください。',
     'date_equals'          => ':attributeには、:dateと同じ日付けを指定してください。',
     'date_format'          => ':attributeは:format形式で指定してください。',
+    'decimal'              => ':attributeの小数点以下の桁数は :decimal桁までにしてください。',
     'different'            => ':attributeと:otherには、異なった内容を指定してください。',
     'digits'               => ':attributeは:digits桁で指定してください。',
     'digits_between'       => ':attributeは:min桁から:max桁の間で指定してください。',
@@ -157,6 +158,8 @@ return [
         'name'     => '名前',
         'email'    => 'メールアドレス',
         'password' => 'パスワード',
+        'comment'  => '書評',
+        'point'    => '点数',
     ],
 
 ];

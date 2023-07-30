@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\V1\Auth\LoginController;
+use App\Http\Controllers\Api\V1\ReviewController;
 use App\Http\Controllers\Api\V1\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -36,6 +37,16 @@ Route::prefix('api')->name('api.')->group(function() {
             ->group(function() {
 
             Route::post('', 'login')->name('login');
+        });
+
+        Route::prefix('review')
+            ->controller(ReviewController::class)
+            ->name('review.')
+            ->group(function() {
+            
+            Route::post('', 'store')
+                ->middleware('has.access.token')
+                ->name('store');
         });
     });
 });
