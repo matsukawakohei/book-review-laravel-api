@@ -35,5 +35,10 @@ class UserControllerTest extends TestCase
                     ->missing('access_token_expire')
                     ->etc()
             );
+        
+        $this->assertDatabaseHas('users', [
+            'name'     => $param['name'],
+            'email'    => $param['email'],
+        ]);
     }
 }
