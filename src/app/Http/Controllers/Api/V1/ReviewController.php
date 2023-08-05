@@ -52,4 +52,21 @@ class ReviewController extends Controller
             return response('登録失敗', Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
+
+    public function destroy(Request $request, Review $review)
+    {
+        $userId = $request->header('user_id');
+        if ((int) $userId !== $review->user_id) {
+            return response('', Response::HTTP_FORBIDDEN);
+        }
+
+        try {
+            $review->delete();
+
+            return response('削除成功', Response::HTTP_OK);
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+            return response('削除失敗', Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
 }
