@@ -51,6 +51,10 @@ Route::prefix('api')->name('api.')->group(function() {
             Route::put('{review}', 'update')
                 ->middleware('has.access.token')
                 ->name('update');
+            
+            Route::delete('{review}', 'destroy')
+                ->middleware('has.access.token')
+                ->name('delete');
         });
     });
 });
