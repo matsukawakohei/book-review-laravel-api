@@ -47,6 +47,10 @@ Route::prefix('api')->name('api.')->group(function() {
             Route::post('', 'store')
                 ->middleware('has.access.token')
                 ->name('store');
+            
+            Route::put('{review}', 'update')
+                ->middleware('has.access.token')
+                ->name('update');
         });
     });
 });
