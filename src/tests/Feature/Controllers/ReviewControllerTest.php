@@ -140,4 +140,58 @@ class ReviewControllerTest extends TestCase
         ])->putJson($url, $param)
             ->assertForbidden();
     }
+
+    /** @test */
+    public function レビュー削除処理(): void
+    {
+        $user   = User::factory()->create([
+            'access_token'        => str_repeat('a', 64),
+            'access_token_expire' => Carbon::now()->addMonthNoOverflow()->toDateTimeString(),
+        ]);
+        $book   = Book::factory()->create([
+            'isbn' => '978-86354-417-8',
+        ]);
+        $review = Review::factory()->create([
+            'book_id' => $book->id,
+            'user_id' => $user->id,
+        ]);
+
+        $url = route('api.v1.review.update', $review);
+        $this->withHeaders([
+            'access_token' => str_repeat('a', 64),
+            'user_id'      => $user->id,
+        ])->deleteJson($url)
+            ->assertOk();
+        
+        $this->assertDatabaseMissing('reviews',[
+            'id'      => $review->id,
+        ]);
+    }
+
+    /** @test */
+    public function レビュー削除処理_ユーザーが異なる場合(): void
+    {
+        $user1  = User::factory()->create([
+            'access_token'        => str_repeat('a', 64),
+            'access_token_expire' => Carbon::now()->addMonthNoOverflow()->toDateTimeString(),
+        ]);
+        $user2  = User::factory()->create([
+            'access_token'        => str_repeat('b', 64),
+            'access_token_expire' => Carbon::now()->addMonthNoOverflow()->toDateTimeString(),
+        ]);
+        $book   = Book::factory()->create([
+            'isbn' => '978-86354-417-8',
+        ]);
+        $review = Review::factory()->create([
+            'book_id' => $book->id,
+            'user_id' => $user1->id,
+        ]);
+
+        $url = route('api.v1.review.update', $review);
+        $this->withHeaders([
+            'access_token' => str_repeat('b', 64),
+            'user_id'      => $user2->id,
+        ])->deleteJson($url)
+            ->assertForbidden();
+    }
 }
