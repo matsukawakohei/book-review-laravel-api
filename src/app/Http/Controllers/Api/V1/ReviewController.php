@@ -61,10 +61,10 @@ class ReviewController extends Controller
                 'point'   => $request->point,
             ]);
 
-            return response('登録成功', Response::HTTP_OK);
+            return response('更新成功', Response::HTTP_OK);
         } catch (Exception $e) {
             Log::error($e->getMessage());
-            return response('登録失敗', Response::HTTP_INTERNAL_SERVER_ERROR);
+            return response('更新失敗', Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
