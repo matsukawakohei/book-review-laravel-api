@@ -8,12 +8,27 @@ use App\Http\Requests\ReviewRequest;
 use App\Models\Book;
 use App\Models\Review;
 use Exception;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\Response;
 
 class ReviewController extends Controller
 {
+    public function index(Request $request): Collection
+    {
+        $isbnArray = $request->input('isbn');
+        $result = Book::with('reviews')
+            ->selectRaw('books.isbn, count(*) AS count, avg(point) AS point')
+            ->whereIn('books.isbn', $isbnArray)
+            ->join('reviews', 'books.id', '=', 'reviews.book_id')
+            ->groupBy('isbn')
+            ->get()
+            ->keyBy('isbn');
+        
+        return $result;
+    }
+
     public function store(ReviewRequest $request)
     {
         $userId = $request->header('user_id');

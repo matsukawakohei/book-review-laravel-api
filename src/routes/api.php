@@ -43,6 +43,9 @@ Route::prefix('api')->name('api.')->group(function() {
             ->controller(ReviewController::class)
             ->name('review.')
             ->group(function() {
+
+            Route::get('', 'index')
+                ->name('index');
             
             Route::post('', 'store')
                 ->middleware('has.access.token')
