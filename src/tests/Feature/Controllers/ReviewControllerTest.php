@@ -194,4 +194,59 @@ class ReviewControllerTest extends TestCase
         ])->deleteJson($url)
             ->assertForbidden();
     }
+
+    /** @test */
+    public function レビュー一覧(): void
+    {
+        $book1    = Book::factory()->create([
+            'isbn' => '978-86354-417-8',
+        ]);
+        $book2    = Book::factory()->create([
+            'isbn' => '978-86354-417-9',
+        ]);
+        $reviews1 = Review::factory(10)->create([
+            'book_id' => $book1->id,
+        ]);
+        $reviews2 = Review::factory(5)->create([
+            'book_id' => $book2->id,
+        ]);
+
+        $url = route('api.v1.review.index', ['isbn' => ['978-86354-417-8', '978-86354-417-9']]);
+        $this->getJson($url)
+            ->assertOk()
+            ->assertJson([
+                '978-86354-417-8' => [
+                    'isbn'  => '978-86354-417-8',
+                    'count' => 10,
+                    'point' => $reviews1->avg('point'),
+                ],
+                '978-86354-417-9' => [
+                    'isbn'  => '978-86354-417-9',
+                    'count' => 5,
+                    'point' => $reviews2->avg('point'),
+                ],
+            ]);
+    }
+
+    /** @test */
+    public function レビュー一覧_レビューが存在しない場合(): void
+    {
+        $book1    = Book::factory()->create([
+            'isbn' => '978-86354-417-8',
+        ]);
+        $book2    = Book::factory()->create([
+            'isbn' => '978-86354-417-9',
+        ]);
+        $reviews1 = Review::factory(10)->create([
+            'book_id' => $book1->id,
+        ]);
+        $reviews2 = Review::factory(5)->create([
+            'book_id' => $book2->id,
+        ]);
+
+        $url = route('api.v1.review.index', ['isbn' => ['978-86354-417-1', '978-86354-417-2']]);
+        $this->getJson($url)
+            ->assertOk()
+            ->assertJson([]);
+    }
 }
