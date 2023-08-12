@@ -22,7 +22,7 @@ class ReviewFactory extends Factory
             'user_id' => User::factory(),
             'book_id' => Book::factory(),
             'comment' => fake()->realText(50),
-            'point'   => fake()->randomFloat(1, 1, 9),
+            'point'   => fake()->randomFloat(1, 1, 5),
         ];
     }
 }
