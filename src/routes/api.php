@@ -50,6 +50,9 @@ Route::prefix('api')->name('api.')->group(function() {
             Route::post('', 'store')
                 ->middleware('has.access.token')
                 ->name('store');
+
+            Route::get('{isbn}', 'show')
+                ->name('show');
             
             Route::put('{review}', 'update')
                 ->middleware('has.access.token')
