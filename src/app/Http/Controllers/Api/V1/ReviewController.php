@@ -48,6 +48,24 @@ class ReviewController extends Controller
         }
     }
 
+    public function show(string $isbn)
+    {
+        $book = Book::with('reviews')->with('reviews.user')->where('isbn', $isbn)->first();
+
+        if ($book) {
+            return $book->reviews->map(function ($review) {
+                return [
+                    'user_id'   => $review->user_id,
+                    'user_name' => $review->user->name,
+                    'comment'   => $review->comment,
+                    'point'     => $review->point,
+                ];
+            });
+        }
+
+        return [];
+    }
+
     public function update(ReviewPutRequest $request, Review $review)
     {
         $userId = $request->header('user_id');
