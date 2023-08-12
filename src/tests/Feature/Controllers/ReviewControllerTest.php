@@ -249,4 +249,55 @@ class ReviewControllerTest extends TestCase
             ->assertOk()
             ->assertJson([]);
     }
+
+    /** @test */
+    public function レビュー詳細(): void
+    {
+        $book    = Book::factory()->create([
+            'isbn'    => '978-86354-417-8',
+        ]);
+        $reviews = Review::factory(3)->create([
+            'book_id' => $book->id,
+        ]);
+
+        $url = route('api.v1.review.show', ['isbn' => $book->isbn]);
+        $this->getJson($url)
+            ->assertOk()
+            ->assertJson([
+                [
+                    'user_id'   => $reviews[0]->user_id,
+                    'user_name' => $reviews[0]->user->name,
+                    'comment'   => $reviews[0]->comment,
+                    'point'     => $reviews[0]->point,
+                ],
+                [
+                    'user_id'   => $reviews[1]->user_id,
+                    'user_name' => $reviews[1]->user->name,
+                    'comment'   => $reviews[1]->comment,
+                    'point'     => $reviews[1]->point,
+                ],
+                [
+                    'user_id'   => $reviews[2]->user_id,
+                    'user_name' => $reviews[2]->user->name,
+                    'comment'   => $reviews[2]->comment,
+                    'point'     => $reviews[2]->point,
+                ],
+            ]);
+    }
+
+    /** @test */
+    public function レビュー詳細_isbnが無効な値(): void
+    {
+        $book = Book::factory()->create([
+            'isbn' => '978-86354-417-8',
+        ]);
+        Review::factory(3)->create([
+            'book_id' => $book->id,
+        ]);
+
+        $url = route('api.v1.review.show', ['isbn' => 'aaaa']);
+        $this->getJson($url)
+            ->assertOk()
+            ->assertJson([]);
+    }
 }
