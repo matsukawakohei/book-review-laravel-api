@@ -69,6 +69,9 @@ Route::prefix('api')->name('api.')->group(function() {
             ->middleware('has.access.token')
             ->name('wishlist.')
             ->group(function() {
+
+            Route::get('', 'index')
+                ->name('index');
             
             Route::post('', 'store')
                 ->name('store');
