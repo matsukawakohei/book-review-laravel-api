@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\V1\Auth\LoginController;
 use App\Http\Controllers\Api\V1\ReviewController;
 use App\Http\Controllers\Api\V1\UserController;
+use App\Http\Controllers\Api\V1\WishListController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -61,6 +62,17 @@ Route::prefix('api')->name('api.')->group(function() {
             Route::delete('{review}', 'destroy')
                 ->middleware('has.access.token')
                 ->name('delete');
+        });
+
+        Route::prefix('wishlist')
+            ->controller(WishListController::class)
+            ->middleware('has.access.token')
+            ->name('wishlist.')
+            ->group(function() {
+            
+            Route::post('', 'store')
+                ->name('store');
+
         });
     });
 });
