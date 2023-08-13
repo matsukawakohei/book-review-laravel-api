@@ -76,6 +76,8 @@ Route::prefix('api')->name('api.')->group(function() {
             Route::post('', 'store')
                 ->name('store');
 
+            Route::delete('{wishList}', 'destroy')
+                ->name('delete');
         });
     });
 });

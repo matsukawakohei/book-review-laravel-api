@@ -128,4 +128,55 @@ class WishListControllerTest extends TestCase
             ->assertOk()
             ->assertJson([]);
     }
+
+    /** @test */
+    public function レビュー削除処理(): void
+    {
+        $user     = User::factory()->create([
+            'access_token'        => str_repeat('a', 64),
+            'access_token_expire' => Carbon::now()->addMonthNoOverflow()->toDateTimeString(),
+        ]);
+        $book     = Book::factory()->create();
+        $wishList = WishList::factory()->create([
+            'book_id' => $book->id,
+            'user_id' => $user->id,
+        ]);
+
+        $url = route('api.v1.wishlist.delete', $wishList);
+        $this->withHeaders([
+            'access_token' => str_repeat('a', 64),
+            'user_id'      => $user->id,
+        ])->deleteJson($url)
+            ->assertOk();
+        
+        $this->assertDatabaseMissing('wish_lists',[
+            'book_id' => $book->id,
+            'user_id' => $user->id,
+        ]);
+    }
+
+    /** @test */
+    public function レビュー削除処理_ユーザーが異なる場合(): void
+    {
+        $user1    = User::factory()->create([
+            'access_token'        => str_repeat('a', 64),
+            'access_token_expire' => Carbon::now()->addMonthNoOverflow()->toDateTimeString(),
+        ]);
+        $user2    = User::factory()->create([
+            'access_token'        => str_repeat('b', 64),
+            'access_token_expire' => Carbon::now()->addMonthNoOverflow()->toDateTimeString(),
+        ]);
+        $book     = Book::factory()->create();
+        $wishList = WishList::factory()->create([
+            'book_id' => $book->id,
+            'user_id' => $user1->id,
+        ]);
+
+        $url = route('api.v1.wishlist.delete', $wishList);
+        $this->withHeaders([
+            'access_token' => str_repeat('b', 64),
+            'user_id'      => $user2->id,
+        ])->deleteJson($url)
+            ->assertForbidden();
+    }
 }
